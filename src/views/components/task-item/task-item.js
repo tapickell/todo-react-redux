@@ -12,7 +12,7 @@ export class TaskItem extends Component {
   constructor() {
     super(...arguments);
 
-    this.state = {editing: false};
+    this.state = {editing: false, paused: true};
 
     this.startTimer = this.startTimer.bind(this);
     this.edit = this.edit.bind(this);
@@ -26,10 +26,11 @@ export class TaskItem extends Component {
   startTimer() {
     const { task } = this.props;
     console.log(`Start Timer Called for ${task.timer} minutes`)
+    this.setState({editing: false, paused: !this.state.paused});
   }
 
   edit() {
-    this.setState({editing: true});
+    this.setState({editing: true, paused: true});
   }
 
   handleKeyUp(event) {
@@ -61,7 +62,7 @@ export class TaskItem extends Component {
   }
 
   stopEditing() {
-    this.setState({editing: false});
+    this.setState({editing: false, paused: true});
   }
 
   toggleStatus() {
@@ -102,19 +103,35 @@ export class TaskItem extends Component {
     );
   }
 
-    renderTimer(task) {
-      return (
-        <div className="task-item__timer">
-          <ReactCountdownClock
-            seconds={task.timer * 60}
-            color="#00FF00"
-            alpha={1.0}
-            size={50}
-            paused={true}
-          />
-        </div>
-      )
-    }
+  renderTimer(task) {
+    return (
+      <div className="task-item__timer">
+        <ReactCountdownClock
+          seconds={task.timer * 60}
+          color="#00FF00"
+          alpha={1.0}
+          size={50}
+          paused={this.state.paused}
+        />
+      </div>
+    )
+  }
+
+  renderTimerInput(task) {
+    return (
+      <div>
+        <input
+          autoComplete="off"
+          autoFocus
+          className="task-item__input"
+          defaultValue={task.timer}
+          maxLength="10"
+          onKeyUp={this.handleKeyUp}
+          type="text"
+        />
+      </div>
+    );
+  }
 
   render() {
     const { editing } = this.state;
@@ -140,7 +157,7 @@ export class TaskItem extends Component {
         </div>
 
         <div className="cell">
-          {editing ? this.renderTimer(task) : this.renderTimer(task)}
+          {editing ? this.renderTimerInput(task) : this.renderTimer(task)}
         </div>
 
         <div className="cell">
