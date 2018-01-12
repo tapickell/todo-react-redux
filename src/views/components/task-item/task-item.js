@@ -28,6 +28,7 @@ export class TaskItem extends Component {
     const { task } = this.props;
     console.log(`Timer Finished Called for ${task.title}`)
     this.setState({editing: false, paused: true});
+    this.toggleStatus();
   }
 
   startTimer() {
