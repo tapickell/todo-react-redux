@@ -72,16 +72,7 @@ export class TaskItem extends Component {
   renderTitle(task) {
     return (
       <div className="task-item__title" tabIndex="0">
-        <div>
         {task.title} - ({task.timer} minutes)
-        </div>
-        <ReactCountdownClock
-          seconds={task.timer * 60}
-          color="#369"
-          alpha={0.9}
-          size={100}
-          paused={true}
-        />
       </div>
     );
   }
@@ -111,6 +102,20 @@ export class TaskItem extends Component {
     );
   }
 
+    renderTimer(task) {
+      return (
+        <div className="task-item__timer">
+          <ReactCountdownClock
+            seconds={task.timer * 60}
+            color="#00FF00"
+            alpha={1.0}
+            size={50}
+            paused={true}
+          />
+        </div>
+      )
+    }
+
   render() {
     const { editing } = this.state;
     const { task } = this.props;
@@ -132,6 +137,10 @@ export class TaskItem extends Component {
 
         <div className="cell">
           {editing ? this.renderTitleInput(task) : this.renderTitle(task)}
+        </div>
+
+        <div className="cell">
+          {editing ? this.renderTimer(task) : this.renderTimer(task)}
         </div>
 
         <div className="cell">
