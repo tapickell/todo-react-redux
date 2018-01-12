@@ -15,12 +15,19 @@ export class TaskItem extends Component {
     this.state = {editing: false, paused: true};
 
     this.startTimer = this.startTimer.bind(this);
+    this.timerFinished = this.timerFinished.bind(this);
     this.edit = this.edit.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.remove = this.remove.bind(this);
     this.save = this.save.bind(this);
     this.stopEditing = this.stopEditing.bind(this);
     this.toggleStatus = this.toggleStatus.bind(this);
+  }
+
+  timerFinished() {
+    const { task } = this.props;
+    console.log(`Timer Finished Called for ${task.title}`)
+    this.setState({editing: false, paused: true});
   }
 
   startTimer() {
@@ -112,6 +119,7 @@ export class TaskItem extends Component {
           alpha={1.0}
           size={50}
           paused={this.state.paused}
+          onComplete={this.timerFinished}
         />
       </div>
     )
