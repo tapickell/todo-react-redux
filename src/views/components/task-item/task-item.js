@@ -12,7 +12,10 @@ export class TaskItem extends Component {
   constructor() {
     super(...arguments);
 
-    this.state = {editing: false, paused: true};
+    this.state = {
+      editing: false,
+      paused: true
+    };
 
     this.startTimer = this.startTimer.bind(this);
     this.timerFinished = this.timerFinished.bind(this);
@@ -22,6 +25,7 @@ export class TaskItem extends Component {
     this.save = this.save.bind(this);
     this.stopEditing = this.stopEditing.bind(this);
     this.toggleStatus = this.toggleStatus.bind(this);
+    this.triggerAlarm = this.triggerAlarm.bind(this);
   }
 
   timerFinished() {
@@ -29,6 +33,11 @@ export class TaskItem extends Component {
     console.log(`Timer Finished Called for ${task.title}`)
     this.setState({editing: false, paused: true});
     this.toggleStatus();
+    this.triggerAlarm();
+  }
+
+  triggerAlarm() {
+    this.props.toggleAlarm();
   }
 
   startTimer() {
@@ -70,7 +79,7 @@ export class TaskItem extends Component {
   }
 
   stopEditing() {
-    this.setState({editing: false, paused: true});
+      this.setState({editing: false, paused: true});
   }
 
   toggleStatus() {
@@ -198,6 +207,7 @@ export class TaskItem extends Component {
 
 TaskItem.propTypes = {
   removeTask: PropTypes.func.isRequired,
+  toggleAlarm: PropTypes.func.isRequired,
   task: PropTypes.object.isRequired,
   updateTask: PropTypes.func.isRequired
 };

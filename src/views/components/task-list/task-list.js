@@ -1,26 +1,59 @@
-import React  from 'react';
+import React, { Component } from 'react';
 import { List } from 'immutable';
 import PropTypes from 'prop-types';
 import TaskItem from '../task-item/task-item';
+import Sound from 'react-sound';
 
 
-function TaskList({removeTask, tasks, updateTask}) {
-  let taskItems = tasks.map((task, index) => {
+export class TaskList extends Component {
+  constructor() {
+    super(...arguments);
+
+    this.state = {alarm: "STOPPED"};
+
+    this.toggleAlarm = this.toggleAlarm.bind(this);
+  }
+
+  toggleAlarm() {
+    if (this.state.alarm === "STOPPED") {
+      this.setState({alarm: "PLAYING"})
+    } else {
+      this.setState({alarm: "STOPPED"})
+    }
+  }
+
+  renderTasks(tasks) {
+    return tasks.map((task, index) => {
+      return (
+        <TaskItem
+          key={index}
+          task={task}
+          removeTask={this.props.removeTask}
+          toggleAlarm={this.toggleAlarm}
+          updateTask={this.props.updateTask}
+        />
+      );
+    });
+  }
+
+  render() {
+    const { tasks } = this.props;
+
     return (
-      <TaskItem
-        key={index}
-        task={task}
-        removeTask={removeTask}
-        updateTask={updateTask}
-      />
+      <div className="task-list">
+        <div>
+          <Sound
+            url="https://duckduckgo.com/share/goodie/timer/1277/alarm.mp3"
+            playStatus={this.state.alarm}
+            playFromPosition={0}
+            autoLoad={true}
+            onFinishedPlaying={this.toggleAlarm}
+          />
+        </div>
+        {this.renderTasks(tasks)}
+      </div>
     );
-  });
-
-  return (
-    <div className="task-list">
-      {taskItems}
-    </div>
-  );
+  }
 }
 
 TaskList.propTypes = {
