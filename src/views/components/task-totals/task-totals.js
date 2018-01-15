@@ -33,10 +33,14 @@ function toHours(seconds) {
   return Math.floor(seconds / 60)
 }
 
+function numberOfTasks(tasks) {
+  return tasks.filter(taskFilter).size
+}
+
 const TaskTotals = ({tasks}) => (
   <div className="task-totals">
-        <p>Tasks Left: {tasks.filter(taskFilter).size}</p>
-        <p>Time Left: {toTime(totalSeconds(tasks))}</p>
+        <p>Tasks Left: {numberOfTasks(tasks)}</p>
+        <p>Time Left: {numberOfTasks(tasks) > 0 ? toTime(totalSeconds(tasks)) : "0"}</p>
   </div>
 );
 
