@@ -2,7 +2,7 @@
   "name": "todo-react-redux",
   "version": "0.6.0",
   "description": "Todo app with Create React App, React Redux, and Firebase",
-  "homepage": "https://todo-react-redux.firebaseapp.com",
+  "homepage": "https://resplendent-inferno-6555.firebaseapp.com",
   "repository": {
     "type": "git",
     "url": "https://github.com/r-park/todo-react-redux.git"
@@ -34,12 +34,14 @@
     "immutable": "^3.8.1",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
+    "react-countdown-clock": "^2.0.0",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.5",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
     "react-router-redux": "^5.0.0-alpha.6",
     "react-scripts": "1.0.10",
+    "react-sound": "^1.0.0",
     "redux": "^3.7.1",
     "redux-thunk": "^2.2.0",
     "reselect": "^3.0.1"

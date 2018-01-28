@@ -25,7 +25,7 @@ export function tasksReducer(state = new TasksState(), {payload, type}) {
         previous: null,
         list: state.deleted && state.deleted.key === payload.key ?
               state.previous :
-              state.list.unshift(payload)
+              state.list.push(payload)
       });
 
     case REMOVE_TASK_SUCCESS:
@@ -39,7 +39,7 @@ export function tasksReducer(state = new TasksState(), {payload, type}) {
       return state.set('filter', payload.filterType || '');
 
     case LOAD_TASKS_SUCCESS:
-      return state.set('list', new List(payload.reverse()));
+      return state.set('list', new List(payload));
 
     case UPDATE_TASK_SUCCESS:
       return state.merge({

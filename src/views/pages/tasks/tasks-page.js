@@ -8,6 +8,7 @@ import { getNotification, notificationActions } from 'src/notification';
 import { getTaskFilter, getVisibleTasks, tasksActions } from 'src/tasks';
 import Notification from '../../components/notification';
 import TaskFilters from '../../components/task-filters';
+import TaskTotals from '../../components/task-totals';
 import TaskForm from '../../components/task-form';
 import TaskList from '../../components/task-list';
 
@@ -74,6 +75,7 @@ export class TasksPage extends Component {
 
         <div className="g-col">
           <TaskFilters filter={this.props.filterType} />
+          <TaskTotals tasks={this.props.tasks} />
           <TaskList
             removeTask={this.props.removeTask}
             tasks={this.props.tasks}

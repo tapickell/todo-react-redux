@@ -14,9 +14,9 @@ import {
 } from './action-types';
 
 
-export function createTask(title) {
+export function createTask(title, timer) {
   return dispatch => {
-    taskList.push({completed: false, title})
+      taskList.push({completed: false, title, timer})
       .catch(error => dispatch(createTaskError(error)));
   };
 }
@@ -60,7 +60,7 @@ export function undeleteTask() {
   return (dispatch, getState) => {
     const task = getDeletedTask(getState());
     if (task) {
-      taskList.set(task.key, {completed: task.completed, title: task.title})
+        taskList.set(task.key, {completed: task.completed, title: task.title, timer: task.timer})
         .catch(error => dispatch(undeleteTaskError(error)));
     }
   };

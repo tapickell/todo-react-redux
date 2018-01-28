@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import Button from '../button';
 import Icon from '../icon';
+import ReactCountdownClock from 'react-countdown-clock';
 
 import './task-item.css';
 
@@ -11,18 +12,42 @@ export class TaskItem extends Component {
   constructor() {
     super(...arguments);
 
-    this.state = {editing: false};
+    this.state = {
+      editing: false,
+      paused: true
+    };
 
+    this.startTimer = this.startTimer.bind(this);
+    this.timerFinished = this.timerFinished.bind(this);
     this.edit = this.edit.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.remove = this.remove.bind(this);
     this.save = this.save.bind(this);
     this.stopEditing = this.stopEditing.bind(this);
     this.toggleStatus = this.toggleStatus.bind(this);
+    this.triggerAlarm = this.triggerAlarm.bind(this);
+  }
+
+  timerFinished() {
+    const { task } = this.props;
+    console.log(`Timer Finished Called for ${task.title}`)
+    this.setState({editing: false, paused: true});
+    this.toggleStatus();
+    this.triggerAlarm();
+  }
+
+  triggerAlarm() {
+    this.props.toggleAlarm();
+  }
+
+  startTimer() {
+    const { task } = this.props;
+    console.log(`Start Timer Called for ${task.timer} minutes`)
+    this.setState({editing: false, paused: !this.state.paused});
   }
 
   edit() {
-    this.setState({editing: true});
+    this.setState({editing: true, paused: true});
   }
 
   handleKeyUp(event) {
@@ -42,6 +67,8 @@ export class TaskItem extends Component {
     if (this.state.editing) {
       const { task } = this.props;
       const title = event.target.value.trim();
+      // const timer = this.state.timer.trim();
+      // console.log(`Handle Update Task ${title}, ${timer}`)
 
       if (title.length && title !== task.title) {
         this.props.updateTask(task, {title});
@@ -52,7 +79,7 @@ export class TaskItem extends Component {
   }
 
   stopEditing() {
-    this.setState({editing: false});
+      this.setState({editing: false, paused: true});
   }
 
   toggleStatus() {
@@ -63,22 +90,64 @@ export class TaskItem extends Component {
   renderTitle(task) {
     return (
       <div className="task-item__title" tabIndex="0">
-        {task.title}
+        {task.title} - ({task.timer} minutes)
       </div>
     );
   }
 
   renderTitleInput(task) {
     return (
-      <input
-        autoComplete="off"
-        autoFocus
-        className="task-item__input"
-        defaultValue={task.title}
-        maxLength="64"
-        onKeyUp={this.handleKeyUp}
-        type="text"
-      />
+      <div>
+        <input
+          autoComplete="off"
+          autoFocus
+          className="task-item__input"
+          defaultValue={task.title}
+          maxLength="64"
+          onKeyUp={this.handleKeyUp}
+          type="text"
+        />
+        <input
+          autoComplete="off"
+          autoFocus
+          className="task-item__input"
+          defaultValue={task.timer}
+          maxLength="10"
+          onKeyUp={this.handleKeyUp}
+          type="text"
+        />
+      </div>
+    );
+  }
+
+  renderTimer(task) {
+    return (
+      <div className="task-item__timer">
+        <ReactCountdownClock
+          seconds={task.timer * 60}
+          color="#00FF00"
+          alpha={1.0}
+          size={50}
+          paused={this.state.paused}
+          onComplete={this.timerFinished}
+        />
+      </div>
+    )
+  }
+
+  renderTimerInput(task) {
+    return (
+      <div>
+        <input
+          autoComplete="off"
+          autoFocus
+          className="task-item__input"
+          defaultValue={task.timer}
+          maxLength="10"
+          onKeyUp={this.handleKeyUp}
+          type="text"
+        />
+      </div>
     );
   }
 
@@ -106,6 +175,15 @@ export class TaskItem extends Component {
         </div>
 
         <div className="cell">
+          {editing ? this.renderTimerInput(task) : this.renderTimer(task)}
+        </div>
+
+        <div className="cell">
+          <Button
+            className={classNames('btn--icon', 'task-item__button', {'hide': editing})}
+            onClick={this.startTimer}>
+            <Icon name="timer" />
+          </Button>
           <Button
             className={classNames('btn--icon', 'task-item__button', {'hide': editing})}
             onClick={this.edit}>
@@ -129,6 +207,7 @@ export class TaskItem extends Component {
 
 TaskItem.propTypes = {
   removeTask: PropTypes.func.isRequired,
+  toggleAlarm: PropTypes.func.isRequired,
   task: PropTypes.object.isRequired,
   updateTask: PropTypes.func.isRequired
 };
